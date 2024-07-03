@@ -2,12 +2,11 @@ let prompt = require('prompt-sync')();
 
 // Define menu options
 
-let menu_options = ["1. Search a Student", "2. Add a new student", "3. Remove a student"];
-let student_list = ["Modesta", "Kinyanjui", "Marion", "Albert", "Ashly", "Winnie"];
+let menu_options = ["1. Search a Student", "2. Add a new student", "3. Remove a student", "4. See all students", "5. Check Duplicate Students", "6. Exit"];
+let student_list = ["Modesta", "Kinyanjui", "Marion", "Albert", "Ashly", "Winnie", "Modesta"];
 
 
 function display_menu_options() {
-    console.log("Welcome to CLI student inventory: ")
     menu_options.forEach(element => {
         console.log(element);
     });
@@ -57,9 +56,9 @@ function delete_student_from_record(student_name) {
     // Find the index of the student to be deleted.
     let index_of_student_to_be_deleted = student_list.findIndex((name) => name.toLowerCase() === student_name.toLowerCase());
     // let index_of_student_to_be_deleted = student_list.indexOf(student_name);
-    if(index_of_student_to_be_deleted === -1){
+    if (index_of_student_to_be_deleted === -1) {
         console.log("Oops, student not found");
-    }else{
+    } else {
         student_list.splice(index_of_student_to_be_deleted, 1);
         console.log(`${student_name} deleted successfully. Below is the new list`);
         console.log(student_list);
@@ -67,24 +66,64 @@ function delete_student_from_record(student_name) {
 
 }
 
+function see_all_students() {
+    console.log("               ");
+    console.log("Below are the records: ");
+    console.log(`Total Records ${student_list.length}.`);
+
+    student_list.forEach((singleStudent, index) => {
+        console.log(`${index + 1}.${singleStudent}`);
+    })
+}
+
+function see_all_students_with_similar_names(name) {
+    console.log("               ");
+    let found = student_list.filter((el) => el.toLowerCase() === name.toLowerCase());
+
+    if (found.length > 1) {
+        found.forEach((singleStudent, index) => {
+            console.log(`${index + 1}.${singleStudent}`);
+        })
+    } else if (found.length === 1) {
+        console.log("No duplicates for the above entry.")
+    }
+    else {
+        console.log("Student not in the system.")
+    }
+}
 
 
 function main() {
-    display_menu_options();
-    let userInput = parseInt(prompt("Kindly choose your action today, from the above options: "));
+    let loopCondition = true;
+    console.log("Welcome to CLI student inventory: ")
 
-    switch (userInput) {
-        case 1: search_student()
-            break;
-        case 2:
-            let student_being_added = prompt("Enter name of new student. ");
-            add_new_student(student_being_added)
-            break;
-        case 3: let student_being_deleted = prompt("Enter name of student. ");
-            delete_student_from_record(student_being_deleted);
-            break;
-        default:
-            console.log("Invalid input")
+    while (loopCondition) {
+        console.log("                       ");
+        display_menu_options();
+        let userInput = parseInt(prompt("Kindly choose your action today, from the above options: "));
+
+        switch (userInput) {
+            case 1: search_student()
+                break;
+            case 2:
+                let student_being_added = prompt("Enter name of new student. ");
+                add_new_student(student_being_added)
+                break;
+            case 3: let student_being_deleted = prompt("Enter name of student. ");
+                delete_student_from_record(student_being_deleted);
+                break;
+            case 4: see_all_students();
+                break;
+            case 5:
+                let stude = prompt("Enter name of student. ");
+                see_all_students_with_similar_names(stude);
+                break;
+            case 6:
+                loopCondition = false;
+                break;
+            default:
+                console.log("Invalid input")
+        }
     }
 }
 
